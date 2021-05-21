@@ -1,0 +1,199 @@
+---
+title: "how_to_use_particle_swarm_optimisation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{how_to_use_particle_swarm_optimisation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(rgl)
+```
+
+## Call the library
+```{r setup}
+set.seed(42)
+library(particle.swarm.optimisation)
+```
+
+To use the Particle or the swarm we need to define a fitness function and a range of value.
+
+```{r prepare}
+range_of_value <- list(c(1,300),c(1,300),c(1,300))
+fitness_function <- function(values){
+  return(values[[1]]+values[[2]]+values[[3]])
+}
+```
+
+## The Particle Class
+
+This class is used to create a Particle for the Particle Swarm Optimisation.
+
+### method new() (initialize):
+
+Used to create the Particle, take different parameters:
+
+- **values_ranges** : A list of ranges for each value of the Particle, his size need to be the same as values.
+- **values** : A numeric vector, each number represented the position of the Particle.
+- **fitness_function** : The function used to find the fitness (or the score) of the particle. It needs to take a list as input and return a single value.
+- **acceleration_coefficient** : A vector of two values, one for c1 (personal coefficient) and one for c2 (global coefficient).
+- **inertia** : A numeric who represent the inertia of the Particle (the effect of the current velocity on the next velocity).
+
+```{r particle_new}
+exemple <- Particle$new(values_ranges = range_of_value,
+                           values = c(50,120,187),
+                           fitness_function = fitness_function,
+                           acceleration_coefficient = c(0.3,0.4),
+                           inertia = 0.4)
+print(exemple)
+```
+
+### method get_fitness()
+
+Used to calculate the fitness of the Particle (with the fitness function)
+```{r particle_get_fitness}
+exemple$get_fitness() # 50+120+187
+print(exemple) 
+```
+
+### method update()
+
+Used to change the position of the Particle based on his personal best and Swarm best, it also changes the personal best if needed.
+It takes one param:
+
+- **swarm_best** : best values of the swarm
+
+```{r Particle_update}
+print(paste('best fitness before :',exemple$personal_best_fitness,sep = ' '))
+exemple$update(swarm_best = c(200,300,300)) # the swarm best is just a random value here
+print(exemple)
+print(paste('best fitness after :',exemple$personal_best_fitness,sep = ' '))
+```
+
+### method update_personal_best_fitness()
+
+This method is used to change the personal best values and fitness with the current values and fitness of the Particles.
+
+```{r particle_update_personal_best_fitness}
+exemple$update_personal_best_fitness() # do nothing because the update method of the previous chunck also call this method.
+```
+
+### method print()
+
+This method print the current values of the particle and the fitness.
+```{r particle_print}
+print(exemple)
+# or :
+exemple$print()
+```
+
+
+## The ParticleSwarm Class
+This class is used to create the swarm and launch the PSO.
+As a user you just need to init the ParticleSwarm object with the $new method and launch the PSO with the $run method.
+
+### method new()
+
+Used to create the ParticleSwarm object, take different parameters:
+
+- **ranges_of_values** : A list of ranges for each value for the particles.
+- **fitness_function** : The function used to find the fitness (or the score) of the particle. It needs to take a list as input and return a single value.
+- **acceleration_coefficient_range** : A list with two vectors with the min and max for c1 and c2.
+- **max_it** : maximum number of itération
+- **inertia** : A numeric who represent the inertia of the particle (the effect of the current velocity on the next velocity)
+- **pop_size** : number of particle in the swarm.
+
+```{r ParticleSwarm_new}
+swarm_exemple <- ParticleSwarm$new(pop_size = 10,
+                                    ranges_of_values = range_of_value,
+                                    fitness_function = fitness_function,
+                                    max_it = 10,
+                                    values_names = list('a','b','c'),
+                                    acceleration_coefficient_range = list(c(0,1),c(0,1)),
+                                    inertia = 0.4)
+```
+
+### method generate_pop()
+
+The generate pop is the method used to create the population of particles.
+The values of the particles are randomly selected in the range of values, the same goes for the acceleration coefficient.
+There is no need to call this method because the run does it for us.
+It takes one parameter:
+
+- **verbose** : if the methods do the print or not
+```{r ParticleSwarm_generate_pop}
+swarm_exemple$generate_pop(verbose = FALSE)
+print(swarm_exemple)
+```
+
+### method move_the_swarm()
+
+This method is used to move the particle in the swarm.
+it takes one argument:
+
+- **verbose** : If the method print or not the result in the console
+
+The swarm's move are based on the following equation:
+V(t+1) = V(t) * i + c1 * r1 * (pb - x(t)) + c2 * r2 * (gb - x(t))
+x(t+1) = x(t) + V(t+1)
+
+Where:
+
+- **V** is the velocity
+- **t** is the number of the iteration
+- **i** is the inertia
+- **c1 and c2** are the acceleration coefficient
+- **r1 and r2** are two random value between 0 and 1 who follow a uniform distribution
+- **pb** is the personal best value of the particle
+- **gb** is the best value of the swarm
+- **x** is the current value of the particle
+
+```{r ParticleSwarm_move_the_swarm}
+swarm_exemple$move_the_swarm(verbose = FALSE)
+print(swarm_exemple)
+```
+
+### method save_pop()
+
+This method is used to save the current population in a csv file, the result is a data frame with the particle in row and the values in col, the last col is the fitness of the particle.
+
+```{r ParticleSwarm_save_the_pop, eval=FALSE}
+swarm_exemple$save_pop()
+```
+
+### method plot_the_swarm_2D()
+
+this method is used to plot the swarm if the problem used two values (if there is 3 values you can use plot3D).
+
+```{r ParticleSwarm_plot_2d}
+swarm_exemple$plot_the_swarm_2D(nb_it=0,save_file=FALSE)
+```
+
+### method plot_the_swarm_3D()
+
+
+this method is used to plot the swarm if the problem used three values.
+it take one param:
+
+- **nb_it** : the number of the iteration used to save the plot
+```{r ParticleSwarm_plot_3D, eval=FALSE}
+swarm_exemple$plot_the_swarm_3D(nb_it=0,save_file=FALSE)
+```
+
+### method run()
+
+This is the main method of the call, it call all the other method to do the PSO (you just need to call this method)
+It takes two params: 
+
+- **plot** TRUE or FALSE, it is used to plot or not the result of each iteration
+- **verbose** TRUE or FALSE, it is used to display or not the result in the console
+
+```{r ParticleSwarm_run}
+swarm_exemple$run(verbose = FALSE,plot = FALSE,save_file = FALSE)
+print(swarm_exemple)
+```

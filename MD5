@@ -1,0 +1,16 @@
+9f4a546d04708cddfe38099ba7370194 *DESCRIPTION
+4dab5abce5c5bb28fab4929811b8119b *NAMESPACE
+77a23be7bd9ff02a1bcc9fc885a8230e *R/particule.R
+d83f93ba4edceb9c6aee354cf6a290e4 *R/swarm.R
+08a711a04f8496166b4b70985353e1be *README
+5be8bb72040aa791805a11623a20b3fc *build/vignette.rds
+d867c0cf37069bdd246a910f4a7297f0 *inst/doc/how-to-use-particule.swarm.optimisation.R
+b334b67b0874a5d2be2dffe35d8a1351 *inst/doc/how-to-use-particule.swarm.optimisation.Rmd
+828128456f56ed7370c2038713211ac9 *inst/doc/how-to-use-particule.swarm.optimisation.html
+76966e9604c214ff23a1c4896c0510b7 *inst/examples/PSO_example.R
+0a5fe35ebbdc24a22534835c85b2a37e *man/Particle.Rd
+93b5d3bb5bea6c729925a56606390bee *man/ParticleSwarm.Rd
+15826b62bf2ffc145145481e9549448c *tests/testthat.R
+883b6f05495e0739748fcd5dde72c3b0 *tests/testthat/test-Particle.R
+44b63a0fd1e6cb02ee2a0ffee6629d1f *tests/testthat/test-ParticleSwarm.R
+b334b67b0874a5d2be2dffe35d8a1351 *vignettes/how-to-use-particule.swarm.optimisation.Rmd
