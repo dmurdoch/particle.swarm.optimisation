@@ -363,8 +363,8 @@ ParticleSwarm <- R6Class('ParticleSwarm',
                               xlim <- c(min(private$.ranges_of_values[[1]]),max(private$.ranges_of_values[[1]]))
                               ylim <- c(min(private$.ranges_of_values[[2]]),max(private$.ranges_of_values[[2]]))
                               zlim <- c(min(private$.ranges_of_values[[3]]),max(private$.ranges_of_values[[3]]))
-                              rgl.clear()
-                              rgl.bg(color = 'white')
+                              clear3d()
+                              bg3d(color = 'white')
                               plot3d(x,y,z,
                                      type="s",
                                      radius=10,
